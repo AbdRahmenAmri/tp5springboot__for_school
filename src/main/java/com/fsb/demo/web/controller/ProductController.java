@@ -65,7 +65,6 @@ public class ProductController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/")
     public ResponseEntity<Object> index() {
-        HashMap<String, Object> data = new HashMap<>();
         response.put("info", "AbdRahmen is my name");
         return new ResponseEntity<Object>(response, HttpStatus.OK);
     }

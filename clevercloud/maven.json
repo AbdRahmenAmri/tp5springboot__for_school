@@ -1,10 +1,10 @@
 {
     "build": {
       "type": "maven",
-      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo.DemoApplication\" exec:java"
+      "goal": "com.fsb.demo.DemoApplication"
     },
     "deploy": {
-      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo.DemoApplication\" exec:java"
+      "goal": "com.fsb.demo.DemoApplication"
     }
   }
   

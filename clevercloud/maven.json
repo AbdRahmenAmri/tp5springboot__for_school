@@ -1,6 +1,6 @@
 {
     "deploy": {
-      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo.DemoApplication.java\" exec:java"
+      "goal": "exec:java -Dexec.mainClass=\"com.fsb.demo.DemoApplication\" -Dexec.classpathScope=test"
     }
   }
   

@@ -1,6 +1,6 @@
 {
     "deploy": {
-      "goal": "-Dprod com.fsb.demo -DskipTests"
+      "goal": "deploy"
     }
   }
   

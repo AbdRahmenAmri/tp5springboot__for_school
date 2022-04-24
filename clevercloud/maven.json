@@ -1,6 +1,6 @@
 {
     "deploy": {
-      "goal": "exec:java -Dexec.mainClass=\"com.fsb.demo.DemoApplication\" -Dexec.classpathScope=test"
+      "goal": "package -Pprod -DskipTests"
     }
   }
   

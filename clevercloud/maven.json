@@ -1,6 +1,6 @@
 {
     "deploy": {
-      "goal": "package -Pprod -DskipTests"
+      "goal": "package  -DskipTests"
     }
   }
   

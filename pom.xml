@@ -40,15 +40,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
-        </executions>
-
+				<goals>
+              		<goal>generate</goal>
+            	</goals>
 			</plugin>
 		</plugins>
 	</build>

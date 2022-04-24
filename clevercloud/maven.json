@@ -1,10 +1,10 @@
 {
     "build": {
-      "type": "<string>",
-      "goal": "<string>"
+      "type": "maven",
+      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo\" assembly:jar-with-dependencies exec:java"
     },
     "deploy": {
-      "goal": "<string>"
+      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo\" assembly:jar-with-dependencies exec:java"
     }
   }
   

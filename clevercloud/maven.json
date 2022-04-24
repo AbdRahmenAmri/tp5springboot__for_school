@@ -1,6 +1,6 @@
 {
     "deploy": {
-      "goal": "-DskipTests"
+      "goal": "-Dtest.active=false -Dexec.mainClass=\"com.fsb.demo.DemoApplication\" exec:java -DskipTests"
     }
   }
   

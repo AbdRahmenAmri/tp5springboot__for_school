@@ -93,7 +93,7 @@ public class ProductController {
             ) {
         HashMap<String, Object> response = new HashMap<>();
         HashMap<String, Object> data = new HashMap<>();
-        if(products.get(indexOfProduct(id)) instanceof Product){
+        if(indexOfProduct(id) != null){
             data.put(Long.toString(products.get(indexOfProduct(id)).getId()), products.get(indexOfProduct(id)).toJSON());
             response.put("data", data);
             return new ResponseEntity<Object>(response, HttpStatus.OK);

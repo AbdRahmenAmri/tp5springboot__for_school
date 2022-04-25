@@ -14,7 +14,7 @@ public class Validators {
     public Boolean isValideImage(){
         String img = this.getField("img");
         String img2 = img;
-        img2.replace(".", "");
+        img2 = img2.replace(".", "");
         if(img2.indexOf(".")!= -1 ) return false;
         for(String str : allowed_img){
             if(img.endsWith(str)) return true;

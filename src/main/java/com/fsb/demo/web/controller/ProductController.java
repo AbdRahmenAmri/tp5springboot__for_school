@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.fsb.demo.web.model.Product;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ProductController {
     private static final String DIR_UPLOAD = "src/main/resources/static/img/";
     private static List<Product> products = new ArrayList<Product>();
-    private HashMap<String, Object> response = new HashMap<>();
     private static Long idCount = 0L;
     static {
         try {
@@ -65,6 +62,7 @@ public class ProductController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/")
     public ResponseEntity<Object> index() {
+        HashMap<String, Object> response = new HashMap<>();
         response.put("info", "AbdRahmen is my name");
         return new ResponseEntity<Object>(response, HttpStatus.OK);
     }
@@ -73,6 +71,7 @@ public class ProductController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @GetMapping("/api/product")
     public ResponseEntity<Object> getProducts() {
+        HashMap<String, Object> response = new HashMap<>();
         HashMap<String, Object> data = new HashMap<>();
         Integer i = 1;
         for (Product product : products) {
@@ -88,7 +87,7 @@ public class ProductController {
     public ResponseEntity<Object> getProduct(
         @PathVariable("id") Long id
             ) {
-        
+        HashMap<String, Object> response = new HashMap<>();
         HashMap<String, Object> data = new HashMap<>();
         if(products.get(indexOfProduct(id)) instanceof Product){
             data.put(Long.toString(products.get(indexOfProduct(id)).getId()), products.get(indexOfProduct(id)).toJSON());
@@ -102,9 +101,10 @@ public class ProductController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @PostMapping("/api/product")
     public ResponseEntity<Object> postProduct(
-            @RequestPart("data") Map<String, Object> request,
-            @RequestParam("file") Optional<MultipartFile> file) throws IOException {
-        
+        @RequestParam("data") Object request,
+        @RequestParam("file") Optional<MultipartFile> file
+        ) throws IOException {
+        HashMap<String, Object> response = new HashMap<>();
         Path path = null;
         byte[] bytes = null;
         ArrayList<String[]> x = new ArrayList<>();
@@ -112,8 +112,8 @@ public class ProductController {
         try {
             x = RequestExtractorField.get(request);
         } catch (Exception e) {
-            this.response.put("error", "invalid request");
-            return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+            response.put("error", "invalid request");
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
         Validators validators = new Validators(x);
         if (!file.isEmpty()) {
@@ -122,24 +122,24 @@ public class ProductController {
             String[] field = { "img", file.get().getOriginalFilename() };
             validators.addField(field);
             if(!validators.isValideImage()){
-                this.response.put("error", "invalid image file");
-                return new ResponseEntity<Object>(this.response,HttpStatus.NOT_ACCEPTABLE);
+                response.put("error", "invalid image file");
+                return new ResponseEntity<Object>(response,HttpStatus.NOT_ACCEPTABLE);
             }
         }
         if (!validators.requireAll(required_fields)) {
-            this.response.put("error", "invalid request");
-            return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+            response.put("error", "invalid request");
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
         try {
-            products.add(new Product(++idCount, validators.getField("short_name"), validators.getField("long_name"),
-                    validators.getDouble("price"), validators.require("img") ? validators.getField("img") : null));
+            products.add(new Product(++idCount, validators.getField("short_name"), validators.getField("long_name"), validators.getDouble("price"), validators.require("img") ? validators.getField("img") : null));
         } catch (Exception e) {
-            this.response.put("error", "cannot create this product -- try later");
-            return new ResponseEntity<Object>(this.response, HttpStatus.NOT_ACCEPTABLE);
+            response.put("error", "cannot create this product -- try later");
+            return new ResponseEntity<Object>(response, HttpStatus.NOT_ACCEPTABLE);
         }
-        Files.write(path, bytes);
-        this.response.put("succes", "product created");
-        return new ResponseEntity<Object>(this.response,HttpStatus.CREATED);
+
+        if(!file.isEmpty()) Files.write(path, bytes);
+        response.put("succes", "product created");
+        return new ResponseEntity<Object>(response,HttpStatus.CREATED);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -149,6 +149,7 @@ public class ProductController {
             @RequestParam("file") Optional<MultipartFile> file,
             @PathVariable("id") Long id)
             throws IOException {
+        HashMap<String, Object> response = new HashMap<>();
         Path path = null;
         byte[] bytes = null;
 
@@ -156,8 +157,8 @@ public class ProductController {
         try {
             x = RequestExtractorField.get(request);
         } catch (Exception e) {
-            this.response.put("error", "invalid request");
-            return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+            response.put("error", "invalid request");
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
         Validators validators = new Validators(x);
         if (!file.isEmpty()) {
@@ -168,8 +169,8 @@ public class ProductController {
         }
 
         if (!validators.requireAll(validators.getFields())){
-            this.response.put("error", "invalid request");
-            return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+            response.put("error", "invalid request");
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
 
         for (Product product : products) {
@@ -177,30 +178,31 @@ public class ProductController {
                 try {
                     product.setByFields(validators);
                 } catch (Exception e) {
-                    this.response.put("error", "invalid field");
-                    return new ResponseEntity<Object>(this.response,HttpStatus.NOT_ACCEPTABLE);
+                    response.put("error", "invalid field");
+                    return new ResponseEntity<Object>(response,HttpStatus.NOT_ACCEPTABLE);
                 }
                 if (!file.isEmpty()) {
                     Files.write(path, bytes);
                 }
-                this.response.put("succes", "product updated");
-                return new ResponseEntity<Object>(this.response,HttpStatus.OK);
+                response.put("succes", "product updated");
+                return new ResponseEntity<Object>(response,HttpStatus.OK);
             }
         }
-        this.response.put("error", "product not found");
-        return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+        response.put("error", "product not found");
+        return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
     }
 
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @DeleteMapping("/api/product/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long id) {
+        HashMap<String, Object> response = new HashMap<>();
         if (indexOfProduct(id) != null) {
             products.remove(indexOfProduct(id).intValue());
-            this.response.put("succes", "product deleted");
-            return new ResponseEntity<Object>(this.response,HttpStatus.OK);
+            response.put("succes", "product deleted");
+            return new ResponseEntity<Object>(response,HttpStatus.OK);
         } else{
-            this.response.put("error", "product not found");
-            return new ResponseEntity<Object>(this.response,HttpStatus.BAD_REQUEST);
+            response.put("error", "product not found");
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
     }
 }

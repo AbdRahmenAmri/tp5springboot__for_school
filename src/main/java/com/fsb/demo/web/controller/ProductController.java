@@ -1,5 +1,6 @@
 package com.fsb.demo.web.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -201,6 +202,12 @@ public class ProductController {
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long id) {
         HashMap<String, Object> response = new HashMap<>();
         if (indexOfProduct(id) != null) {
+            if(products.get(Integer.parseInt(id.toString())).getImg() != null){
+                String fileName = products.get(Integer.parseInt(id.toString())).getImg();
+                File image = new File(DIR_UPLOAD + fileName);
+                image.delete();
+
+            }
             products.remove(indexOfProduct(id).intValue());
             response.put("succes", "product deleted");
             return new ResponseEntity<Object>(response,HttpStatus.OK);

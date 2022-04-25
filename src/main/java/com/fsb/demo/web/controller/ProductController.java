@@ -57,9 +57,8 @@ public class ProductController {
     private Integer indexOfProduct(Long id) {
         Integer index = 0;
         for (Product product : products) {
-            if (product.getId() == id)
-                return index;
-            index++;
+            if (product.getId() == id) return index;
+            ++index;
         }
         return null;
     }
@@ -202,7 +201,7 @@ public class ProductController {
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") Long id) {
         HashMap<String, Object> response = new HashMap<>();
         if (indexOfProduct(id) != null) {
-            if(products.get(Integer.parseInt(id.toString())).getImg() != null){
+            if(products.get(indexOfProduct(id).intValue()).getImg() != null){
                 String fileName = products.get(Integer.parseInt(id.toString())).getImg();
                 File image = new File(DIR_UPLOAD + fileName);
                 image.delete();

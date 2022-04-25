@@ -28,7 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ProductController {
-    private static final String DIR_UPLOAD = "./src/main/resources/static/img/";
+
+
+    private final String DIR_UPLOAD = Paths.get((Paths.get(this.getClass().getResource("/").getPath())).toAbsolutePath() + "/static/img") + "/";
+    
+
     private static List<Product> products = new ArrayList<Product>();
     private static Long idCount = 0L;
     static {

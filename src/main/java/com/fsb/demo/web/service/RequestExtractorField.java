@@ -11,7 +11,6 @@ public class RequestExtractorField {
         r = r.replaceAll("\\}", "");
         r = r.replaceAll("\"", "");
         r = r.replaceAll("\'", "");
-        r = r.replaceAll(" ", "");
 
         for(String i : r.split(",")){
             if(i.contains("=")){
